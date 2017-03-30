@@ -1,0 +1,60 @@
+---
+- name: Installing lvm
+  sudo: yes
+  apt:
+    name: lvm2
+    state: present
+
+- name: Creating new LVM volume group
+  sudo: yes
+  lvg:
+    vg: "{{lvm_volume_group}}"
+    pvs: "{{lvm_physical_volumes}}"
+    state: present
+  when: lvm_create
+
+- name: Creating new LVM logical volume
+  sudo: yes
+  lvol:
+    vg: "{{lvm_volume_group}}"
+    lv: "{{item.volume}}"
+    size: "{{item.size}}"
+  with_items: "{{lvm_logical_volumes}}"
+  when: lvm_create
+
+- name: Creating new filesystem on new LVM logical volume
+  sudo: yes
+  filesystem:
+    fstype: "{{item.filesystem}}"
+    dev: "/dev/{{lvm_volume_group}}/{{item.volume}}"
+  with_items: "{{lvm_logical_volumes}}"
+  when: lvm_create
+
+- name: Mounting new filesystem
+  sudo: yes
+  mount:
+    name: "{{item.mount_path}}"
+    src: "/dev/{{lvm_volume_group}}/{{item.volume}}"
+    fstype: "{{item.filesystem}}"
+    opts: "{{item.mount_opts | default('defaults')}}"
+    state: "mounted"
+  with_items: "{{lvm_logical_volumes}}"
+  when: lvm_create
+
+- name: Extending existing LVM volume group
+  sudo: yes
+  lvg:
+    vg: "{{lvm_extend_volume_group}}"
+    pvs: "{{lvm_extend_disks}}"
+  when: lvm_extend
+
+- name: Extending existing filesystem
+  sudo: yes
+  command: "lvextend {{lvm_lvextend_options}} /dev/{{lvm_extend_volume_group}}/{{lvm_extend_logical_volume}}"
+  ignore_errors: true
+  when: lvm_extend
+
+- name: Resizing filesystem
+  sudo: yes
+  command: "resize2fs /dev/{{lvm_resize_volume_group}}/{{lvm_resize_logical_volume}}"
+  when: lvm_resize

@@ -1,0 +1,23 @@
+---
+
+lvm_volume_group
+lvm_physical_volumes
+lvm_logical_volumes
+lvm_extend_volume_group
+lvm_extend_logical_volume
+lvm_extend_disks
+lvm_lvextend_options
+lvm_resize_volume_group
+lvm_resize_logical_volume
+
+# LVM role parameters
+lvm_physical_volumes: "/dev/xvdb,/dev/xvdc"
+lvm_volume_group: "riemann_influx_data"
+lvm_logical_volumes:
+  - volume: data
+    filesystem: ext4
+    mount_path: "/riemann_influx_data"
+    mount_opts: noatime
+lvm_create: true
+lvm_extend: false
+lvm_resize: false
