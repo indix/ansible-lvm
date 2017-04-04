@@ -1,14 +1,14 @@
 ---
 
-lvm_volume_group
-lvm_physical_volumes
-lvm_logical_volumes
-lvm_extend_volume_group
-lvm_extend_logical_volume
-lvm_extend_disks
-lvm_lvextend_options
-lvm_resize_volume_group
-lvm_resize_logical_volume
+#lvm_volume_group
+#lvm_physical_volumes
+#lvm_logical_volumes
+#lvm_extend_volume_group
+#lvm_extend_logical_volume
+#lvm_extend_disks
+#lvm_lvextend_options
+#lvm_resize_volume_group
+#lvm_resize_logical_volume
 
 # LVM role parameters
 lvm_physical_volumes: "/dev/xvdb,/dev/xvdc"
