@@ -19,6 +19,7 @@
     vg: "{{lvm_volume_group}}"
     lv: "{{item.volume}}"
     size: "{{item.size}}"
+    shrink: "{{item.shrink}}"
   with_items: "{{lvm_logical_volumes}}"
   when: lvm_create
 
